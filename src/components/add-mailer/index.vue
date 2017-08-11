@@ -20,13 +20,12 @@
       <el-form-item label="上传图片" prop="images">
         <el-upload
           action="http://localhost:3000/upload"
+          :show-file-list="false"
           :on-success="handleSuccess"
-          :on-change="handleChange"
           :fileList="mailForm.images"
           style="float: left"
-          listType="picture">
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
+          listType="picture-card">
+          <i class="el-icon-plus"></i>
         </el-upload>
       </el-form-item>
       <el-button type="primary" size="large" style="width: 80%" @click="submitForm('mailForm')">
@@ -40,6 +39,7 @@
     name: 'addMailer',
     data() {
       return {
+        imageUrl: '',
         mailForm: {
           name: '',
           address: '',
@@ -54,7 +54,8 @@
             trigger: 'submit'
           }],
           time: [{type: 'date', required: true, message: '请选择时间', trigger: 'submit'}]
-        }
+        },
+        imgList: []
       }
     },
     methods: {
@@ -68,8 +69,7 @@
         this.mailForm = {
           name: '',
           address: '',
-          time: '',
-          images: []
+          time: ''
         }
       },
       submitForm(formName) {
@@ -89,13 +89,11 @@
         img.url = 'http://localhost:3000/' + res.path
         img.size = res.size
         img.type = res.type
-        this.mailForm.images.push(img)
-        console.log(img)
-      },
-      handleChange(file, fileList) {
-        console.log(file)
-        console.log(fileList)
+        console.log(this.imgList.push(img))
       }
     }
   }
 </script>
+<style>
+
+</style>
