@@ -11,7 +11,10 @@ import {
   Input,
   Table,
   TableColumn,
-  Upload
+  Upload,
+  Dialog,
+  TimePicker,
+  Icon
 } from 'element-ui'
 import App from './App'
 import router from './router'
@@ -26,6 +29,9 @@ Vue.use(Input)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Upload)
+Vue.use(Dialog)
+Vue.use(TimePicker)
+Vue.use(Icon)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
