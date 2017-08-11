@@ -19,7 +19,7 @@
       </el-form-item>
       <el-form-item label="上传图片" prop="images">
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://localhost:3000/upload"
           :on-success="handleSuccess"
           :on-change="handleChange"
           :fileList="mailForm.images"
@@ -47,19 +47,18 @@
           images: []
         },
         rule: {
-          name: [
-            {required: true, message: '请输入收件人名称', trigger: 'submit'}
-          ],
-          address: [
-            {required: true, message: '请输入收件人地址', trigger: 'submit'},
-            {type: 'email', message: '请输入正确的邮箱格式', trigger: 'submit'}
-          ],
+          name: [{required: true, message: '请输入收件人名称', trigger: 'submit'}],
+          address: [{required: true, message: '请输入收件人地址', trigger: 'submit'}, {
+            type: 'email',
+            message: '请输入正确的邮箱格式',
+            trigger: 'submit'
+          }],
           time: [{type: 'date', required: true, message: '请选择时间', trigger: 'submit'}]
         }
       }
     },
     methods: {
-      formatForm (form) {
+      formatForm(form) {
         if (form.time) {
           form.time = form.time.toLocaleTimeString()
         }
@@ -85,9 +84,13 @@
         })
       },
       handleSuccess(res, file, fileList) {
-        console.log(file)
-        console.log(res)
-        console.log(fileList)
+        const img = {}
+        img.name = res.name
+        img.url = 'http://localhost:3000/' + res.path
+        img.size = res.size
+        img.type = res.type
+        this.mailForm.images.push(img)
+        console.log(img)
       },
       handleChange(file, fileList) {
         console.log(file)

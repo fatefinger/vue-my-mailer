@@ -48,11 +48,6 @@
               <el-table-column
                 property="images"
                 label="图片列表">
-                <!--<template scope="scope">-->
-                <!--<el-card :body-style="{ padding: '0px' }" v-for="item in scope.row.images" :key="item.url">-->
-                <!--<img src="item.url" class="image">-->
-                <!--</el-card>-->
-                <!--</template>-->
               </el-table-column>
             </el-table>
           </el-col>
@@ -77,9 +72,6 @@
       }
     },
     methods: {
-//      mailAddress (value) {
-//        return value.slice(1, -1)
-//      },
       onSuccess (data) {
         console.log(data)
         this.dialogVisible = false
