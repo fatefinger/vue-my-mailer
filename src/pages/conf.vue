@@ -48,11 +48,11 @@
               <el-table-column
                 property="images"
                 label="图片列表">
-                <!--<template scope="scope">-->
-                <!--<el-card :body-style="{ padding: '0px' }" v-for="item in scope.row.images" :key="item.url">-->
-                <!--<img src="item.url" class="image">-->
-                <!--</el-card>-->
-                <!--</template>-->
+                <template scope="scope">
+                <el-card :body-style="{ padding: '0px' }" v-for="item in scope.row.images" :key="item.url">
+                <img :src="item.url" class="image">
+                </el-card>
+                </template>
               </el-table-column>
             </el-table>
           </el-col>
@@ -88,4 +88,9 @@
     }
   }
 </script>
-
+<style>
+  .image{
+    max-width: 100px;
+    max-height: 100px;
+  }
+</style>

@@ -19,10 +19,9 @@
       </el-form-item>
       <el-form-item label="上传图片" prop="images">
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://localhost:3000/upload"
           :on-success="handleSuccess"
-          :on-change="handleChange"
-          :fileList="mailForm.images"
+          ref="upload"
           style="float: left"
           listType="picture">
           <el-button size="small" type="primary">点击上传</el-button>
@@ -59,7 +58,7 @@
       }
     },
     methods: {
-      formatForm (form) {
+      formatForm(form) {
         if (form.time) {
           form.time = form.time.toLocaleTimeString()
         }
@@ -74,24 +73,42 @@
         }
       },
       submitForm(formName) {
+        let that = this
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$emit('on-success', this.formatForm(this.mailForm))
-            this.initForm()
+            let xhr = new XMLHttpRequest()
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4) {
+                if ((xhr.status >= 200) && (xhr.status < 300) || xhr.status === 304) {
+                  console.log(xhr.responseText)
+                } else {
+                  console.log('失败' + xhr.status)
+                }
+              }
+            }
+            xhr.open('post', '/mail', true)
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.send(JSON.stringify(that.mailForm))
+            that.$emit('on-success', that.formatForm(that.mailForm))
+            that.initForm()
           } else {
             console.log('error submit!!')
             return false
           }
         })
       },
-      handleSuccess(res, file, fileList) {
-        console.log(file)
+      handleSuccess(res, file) {
+        let item = {
+          file: '',
+          url: '',
+          path: ''
+        }
         console.log(res)
-        console.log(fileList)
-      },
-      handleChange(file, fileList) {
-        console.log(file)
-        console.log(fileList)
+        item.path = res.path.split('\\').pop()
+        item.file = file.name
+        item.url = file.url
+        console.log(item)
+        this.mailForm.images.push(item)
       }
     }
   }
