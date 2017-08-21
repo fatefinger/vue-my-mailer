@@ -20,12 +20,12 @@
       <el-form-item label="上传图片" prop="images">
         <el-upload
           action="http://localhost:3000/upload"
-          :show-file-list="false"
           :on-success="handleSuccess"
-          :fileList="mailForm.images"
+          ref="upload"
           style="float: left"
-          listType="picture-card">
-          <i class="el-icon-plus"></i>
+          listType="picture">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
         </el-upload>
       </el-form-item>
       <el-button type="primary" size="large" style="width: 80%" @click="submitForm('mailForm')">
@@ -39,7 +39,6 @@
     name: 'addMailer',
     data() {
       return {
-        imageUrl: '',
         mailForm: {
           name: '',
           address: '',
@@ -47,15 +46,15 @@
           images: []
         },
         rule: {
-          name: [{required: true, message: '请输入收件人名称', trigger: 'submit'}],
-          address: [{required: true, message: '请输入收件人地址', trigger: 'submit'}, {
-            type: 'email',
-            message: '请输入正确的邮箱格式',
-            trigger: 'submit'
-          }],
+          name: [
+            {required: true, message: '请输入收件人名称', trigger: 'submit'}
+          ],
+          address: [
+            {required: true, message: '请输入收件人地址', trigger: 'submit'},
+            {type: 'email', message: '请输入正确的邮箱格式', trigger: 'submit'}
+          ],
           time: [{type: 'date', required: true, message: '请选择时间', trigger: 'submit'}]
-        },
-        imgList: []
+        }
       }
     },
     methods: {
@@ -69,31 +68,49 @@
         this.mailForm = {
           name: '',
           address: '',
-          time: ''
+          time: '',
+          images: []
         }
       },
       submitForm(formName) {
+        let that = this
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$emit('on-success', this.formatForm(this.mailForm))
-            this.initForm()
+            let xhr = new XMLHttpRequest()
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4) {
+                if ((xhr.status >= 200) && (xhr.status < 300) || xhr.status === 304) {
+                  console.log(xhr.responseText)
+                } else {
+                  console.log('失败' + xhr.status)
+                }
+              }
+            }
+
+            xhr.open('post', '/mail', true)
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.send(JSON.stringify(that.mailForm))
+            that.$emit('on-success', that.formatForm(that.mailForm))
+            that.initForm()
           } else {
             console.log('error submit!!')
             return false
           }
         })
       },
-      handleSuccess(res, file, fileList) {
-        const img = {}
-        img.name = res.name
-        img.url = 'http://localhost:3000/' + res.path
-        img.size = res.size
-        img.type = res.type
-        console.log(this.imgList.push(img))
+      handleSuccess(res, file) {
+        let item = {
+          file: '',
+          url: '',
+          path: ''
+        }
+        console.log(res)
+        item.path = res.path.split('\\').pop()
+        item.file = file.name
+        item.url = file.url
+        console.log(item)
+        this.mailForm.images.push(item)
       }
     }
   }
 </script>
-<style>
-
-</style>
