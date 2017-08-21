@@ -86,6 +86,7 @@
                 }
               }
             }
+
             xhr.open('post', '/mail', true)
             xhr.setRequestHeader('Content-Type', 'application/json')
             xhr.send(JSON.stringify(that.mailForm))
