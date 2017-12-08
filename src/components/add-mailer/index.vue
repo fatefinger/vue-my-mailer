@@ -19,7 +19,7 @@
       </el-form-item>
       <el-form-item label="上传图片" prop="images">
         <el-upload
-          action="http://localhost:3000/upload"
+          action="http://localhost:3000/v1/upload"
           :on-success="handleSuccess"
           ref="upload"
           style="float: left"
@@ -31,6 +31,7 @@
       <el-button type="primary" size="large" style="width: 80%" @click="submitForm('mailForm')">
         创建任务
       </el-button>
+      <el-button @click="getInfo">测试</el-button>
     </el-form>
   </div>
 </template>
@@ -87,7 +88,7 @@
               }
             }
 
-            xhr.open('post', '/mail', true)
+            xhr.open('post', '/v1/mail', true)
             xhr.setRequestHeader('Content-Type', 'application/json')
             xhr.send(JSON.stringify(that.mailForm))
             that.$emit('on-success', that.formatForm(that.mailForm))
@@ -110,6 +111,20 @@
         item.url = file.url
         console.log(item)
         this.mailForm.images.push(item)
+      },
+      getInfo() {
+        let xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if ((xhr.status >= 200) && (xhr.status < 300) || xhr.status === 304) {
+              console.log(xhr.responseText)
+            } else {
+              console.log('失败' + xhr.status)
+            }
+          }
+        }
+        xhr.open('get', '/v1/mail', true)
+        xhr.send()
       }
     }
   }
